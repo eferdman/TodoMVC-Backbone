@@ -62,11 +62,29 @@ var app = app || {};
 			this.$el.toggleClass('hidden', this.isHidden());
 		},
 
-		isHidden: function () {
-			return this.model.get('completed') ?
-				app.TodoFilter === 'active' :
-				app.TodoFilter === 'completed';
+		// isHidden: function () { //same function using ternary operator 
+		// 	return this.model.get('completed') ?
+		// 			(app.TodoFilter === 'active') || (app.TodoFilter === 'priority') :
+		// 			this.model.get('priority') ?
+		// 				app.TodoFilter === 'completed' :
+		// 				(app.TodoFilter === 'completed') || (app.TodoFilter === 'priority');
+		// },
+
+		isHidden: function() {
+			// Hide completed tasks on Active and Priority pages
+			if (this.model.get('completed') ) {
+				return (app.TodoFilter === 'active') || (app.TodoFilter === 'priority');
+			} else {
+				// Hide priority tasks on the Completed page
+				if (this.model.get('priority')) {
+					return app.TodoFilter === 'completed';
+				} else {
+					// Hide unmarked active tasks on the Completed and Priority pages
+					return (app.TodoFilter === 'completed') || (app.TodoFilter === 'priority');
+				}
+			};
 		},
+
 
 		// Toggle the `"completed"` state of the model.
 		toggleCompleted: function () {
